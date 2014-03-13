@@ -121,6 +121,7 @@
     [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [button setBackgroundImage:activity.image forState:UIControlStateNormal];
     button.accessibilityLabel = activity.title;
+	[self configIconButton:button];
     [view addSubview:button];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, 80, 30)];
@@ -137,9 +138,33 @@
     CGRect frame = label.frame;
     frame.origin.x = roundf((view.frame.size.width - frame.size.width) / 2.0f);
     label.frame = frame;
+	[self configIconTitle:label];
     [view addSubview:label];
     
     return view;
+}
+
+// config icon button and icon title
+
+#define ACTIVITY_ICON_TITLE_FONT_SIZE 12.0f
+#define ACTIVITY_ICON_SHADOW_OPACITY 0.25
+#define ACTIVITY_ICON_SHADOW_OFFSET 1.0f
+
+- (void)configIconButton:(UIButton *)button
+{
+	UIColor *shadowColor = [UIColor blackColor];
+	[button.layer setShadowColor:shadowColor.CGColor];
+	[button.layer setShadowOpacity:ACTIVITY_ICON_SHADOW_OPACITY];
+	[button.layer setShadowOffset:CGSizeMake(0, ACTIVITY_ICON_SHADOW_OFFSET)];
+	[button.layer setShadowRadius:ACTIVITY_ICON_SHADOW_OFFSET];
+}
+
+- (void)configIconTitle:(UILabel *)titleLabel
+{
+	[titleLabel setFont:[UIFont systemFontOfSize:ACTIVITY_ICON_TITLE_FONT_SIZE]];
+	[titleLabel setTextColor:[UIColor blackColor]];
+	[titleLabel setShadowColor:nil];
+	[titleLabel setShadowOffset:CGSizeMake(0, 0)];
 }
 
 - (void)layoutSubviews
