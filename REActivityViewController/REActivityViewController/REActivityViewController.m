@@ -26,6 +26,8 @@
 #import "REActivityViewController.h"
 #import "REActivityView.h"
 
+#define ADJUST_HEIGHT 130.0f
+
 @interface REActivityViewController ()
 
 @property (strong, readonly, nonatomic) UIView *backgroundView;
@@ -149,12 +151,12 @@
 {
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsPortrait(interfaceOrientation) || UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        if (_activities.count <= 3) return 214;
-        if (_activities.count <= 6) return 317;
+        if (_activities.count <= 3) return ADJUST_HEIGHT;
+        if (_activities.count <= 6) return ADJUST_HEIGHT;
         if (IS_IPHONE_5 && _activities.count > 9) {
             return 517;
         }
-        return 417;
+        return ADJUST_HEIGHT;
     } else {
         if (_activities.count <= 4) return 214;
         return 310;
