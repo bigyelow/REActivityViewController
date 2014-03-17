@@ -34,6 +34,9 @@
 #   define UILineBreakModeMiddleTruncation   NSLineBreakByTruncatingMiddle
 #endif
 
+#define ADJUST_HEIGHT 20.0f
+#define LABEL_ADJUST_HEIGHT 5.0f
+
 @implementation REActivityView
 
 - (id)initWithFrame:(CGRect)frame activities:(NSArray *)activities
@@ -50,7 +53,7 @@
             [self addSubview:_backgroundImageView];
         }
     
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 39, frame.size.width, self.frame.size.height - 104)];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 39, frame.size.width, self.frame.size.height)];
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.delegate = self;
@@ -71,7 +74,7 @@
                     page++;
                 }
             } else {
-                if (index % 9 == 0) {
+                if (index % 3 == 0) {
                     row = 0;
                     page++;
                 }
@@ -97,16 +100,16 @@
             _scrollView.scrollEnabled = NO;
         }
         
-        _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_cancelButton setBackgroundImage:[[UIImage imageNamed:@"REActivityViewController.bundle/Button"] stretchableImageWithLeftCapWidth:22 topCapHeight:47] forState:UIControlStateNormal];
-        _cancelButton.frame = CGRectMake(22, 352, 276, 47);
-        [_cancelButton setTitle:NSLocalizedStringFromTable(@"button.cancel", @"REActivityViewController", @"Cancel") forState:UIControlStateNormal];
-        [_cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_cancelButton setTitleShadowColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.4] forState:UIControlStateNormal];
-        [_cancelButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
-        [_cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:19]];
-        [_cancelButton addTarget:self action:@selector(cancelButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_cancelButton];
+//        _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [_cancelButton setBackgroundImage:[[UIImage imageNamed:@"REActivityViewController.bundle/Button"] stretchableImageWithLeftCapWidth:22 topCapHeight:47] forState:UIControlStateNormal];
+//        _cancelButton.frame = CGRectMake(22, 352, 276, 47);
+//        [_cancelButton setTitle:NSLocalizedStringFromTable(@"button.cancel", @"REActivityViewController", @"Cancel") forState:UIControlStateNormal];
+//        [_cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [_cancelButton setTitleShadowColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.4] forState:UIControlStateNormal];
+//        [_cancelButton.titleLabel setShadowOffset:CGSizeMake(0, -1)];
+//        [_cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:19]];
+//        [_cancelButton addTarget:self action:@selector(cancelButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:_cancelButton];
     }
     return self;
 }
@@ -116,7 +119,7 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(x, y, 80, 80)];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(10, 0, 59, 59);
+    button.frame = CGRectMake(10, 0 + ADJUST_HEIGHT, 59, 59);
     button.tag = index;
     [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [button setBackgroundImage:activity.image forState:UIControlStateNormal];
@@ -124,7 +127,7 @@
 	[self configIconButton:button];
     [view addSubview:button];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, 80, 30)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 59 + ADJUST_HEIGHT + LABEL_ADJUST_HEIGHT, 80, 30)];
     label.textAlignment = UITextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor whiteColor];
@@ -178,13 +181,13 @@
         UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
         
         if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-            scrollViewFrame.origin.y = 39;
+            scrollViewFrame.origin.y = 0;
             
             cancelButtonFrame.size.width = 276;
             cancelButtonFrame.origin.y = self.frame.size.height - 47 - 16;
             cancelButtonFrame.origin.x = (self.frame.size.width - cancelButtonFrame.size.width) / 2.0f;
         } else {
-            scrollViewFrame.origin.y = 29;
+            scrollViewFrame.origin.y = 0;
             
             cancelButtonFrame.size.width = 236;
             cancelButtonFrame.origin.y = self.frame.size.height - 47 - 18;
@@ -210,7 +213,7 @@
                         page++;
                     }
                 } else {
-                    if (index % 9 == 0) {
+                    if (index % 3 == 0) {
                         row = 0;
                         page++;
                     }
@@ -243,10 +246,13 @@
         _scrollView.pagingEnabled = YES;
         
         CGRect pageControlFrame = _pageControl.frame;
-        pageControlFrame.origin.y = self.frame.size.height - 84;
+        pageControlFrame.origin.y = self.frame.size.height - 15;
         pageControlFrame.size.width = self.frame.size.width;
         _pageControl.frame = pageControlFrame;
         _pageControl.numberOfPages = page + 1;
+      
+      [_pageControl setPageIndicatorTintColor:[UIColor whiteColor]];
+      [_pageControl setCurrentPageIndicatorTintColor:[UIColor lightGrayColor]];
         
         if (_pageControl.numberOfPages <= 1) {
             _pageControl.hidden = YES;
@@ -255,7 +261,7 @@
             _pageControl.hidden = NO;
             _scrollView.scrollEnabled = YES;
         }
-        
+      
         [self pageControlValueChanged:_pageControl];
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         // For iPad
