@@ -208,7 +208,7 @@
                 col = index%3;
                 if (index % 3 == 0) row++;
                 if (IS_IPHONE_5) {
-                    if (index % 12 == 0) {
+                    if (index % 3 == 0) {
                         row = 0;
                         page++;
                     }
@@ -251,9 +251,12 @@
         _pageControl.frame = pageControlFrame;
         _pageControl.numberOfPages = page + 1;
       
-      [_pageControl setPageIndicatorTintColor:[UIColor whiteColor]];
-      [_pageControl setCurrentPageIndicatorTintColor:[UIColor lightGrayColor]];
-        
+      CGFloat systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
+      if (systemVersion >= 6.0) {
+        [_pageControl setPageIndicatorTintColor:[UIColor whiteColor]];
+        [_pageControl setCurrentPageIndicatorTintColor:[UIColor lightGrayColor]];
+      }
+
         if (_pageControl.numberOfPages <= 1) {
             _pageControl.hidden = YES;
             _scrollView.scrollEnabled = NO;
